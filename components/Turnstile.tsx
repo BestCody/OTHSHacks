@@ -5,6 +5,7 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 
 type TurnstileOptions = {
   sitekey: string;
   callback: (token: string) => void;
+  action: string;
   execution: "render";
   appearance: "interaction-only";
   "expired-callback": () => void;
@@ -37,6 +38,7 @@ export type TurnstileHandle = {
 
 type TurnstileProps = {
   siteKey: string;
+  action: string;
   onToken: (token: string) => void;
   onError?: (message: string) => void;
 };
@@ -55,7 +57,7 @@ function describeTurnstileError(errorCode: string) {
 }
 
 export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Turnstile(
-  { siteKey, onToken, onError },
+  { siteKey, action, onToken, onError },
   ref,
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -90,6 +92,7 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
       widgetIdRef.current = api.render(element, {
         sitekey: siteKey,
         callback: publishToken,
+        action,
         execution: "render",
         appearance: "interaction-only",
         "expired-callback": () => publishToken(""),
@@ -109,7 +112,7 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
     } catch {
       reportError("Security check could not start. Refresh the page and try again.");
     }
-  }, [publishToken, reportError, siteKey]);
+  }, [action, publishToken, reportError, siteKey]);
 
   useImperativeHandle(ref, () => ({
     reset() {
@@ -178,7 +181,7 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
     };
   }, [publishToken, renderWidget, reportError, siteKey]);
 
-  if (!siteKey) return <p className="help">Bot protection is disabled in this environment.</p>;
+  if (!siteKey) return <p className="error" role="alert">Security verification is unavailable. Authentication is disabled.</p>;
 
   return <div ref={containerRef} aria-label="Bot verification" />;
 });

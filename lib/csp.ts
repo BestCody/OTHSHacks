@@ -4,7 +4,6 @@ const commonDirectives = [
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob: https://*.supabase.co",
   "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com https://plausible.io",
@@ -14,11 +13,18 @@ const commonDirectives = [
 ];
 
 export function buildAppCsp(nonce: string, environment = process.env.NODE_ENV) {
-  const developmentSource = environment === "development" ? " 'unsafe-eval'" : "";
+  const isDevelopment = environment === "development";
+  const developmentScriptSource = isDevelopment ? " 'unsafe-eval'" : "";
+  const styleSource = isDevelopment
+    ? "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com"
+    : `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`;
+  const styleAttributeSource = isDevelopment ? "style-src-attr 'unsafe-inline'" : "style-src-attr 'none'";
 
   return [
     ...commonDirectives.slice(0, 5),
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${developmentSource} https://challenges.cloudflare.com https://plausible.io`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${developmentScriptSource} https://challenges.cloudflare.com https://plausible.io`,
+    styleSource,
+    styleAttributeSource,
     ...commonDirectives.slice(5),
   ].join("; ");
 }
@@ -27,6 +33,8 @@ export function buildLandingCsp() {
   return [
     ...commonDirectives.slice(0, 5),
     "script-src 'self' https://plausible.io",
+    "style-src 'self' https://fonts.googleapis.com",
+    "style-src-attr 'none'",
     ...commonDirectives.slice(5),
   ].join("; ");
 }

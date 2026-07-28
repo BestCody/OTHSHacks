@@ -7,8 +7,14 @@ import { Turnstile, type TurnstileHandle } from "@/components/Turnstile";
 import { getSafeAuthRedirect } from "@/lib/safe-redirect";
 
 type Mode = "login" | "signup" | "forgot" | "update";
+type CaptchaMode = Exclude<Mode, "update">;
+type AuthFormProps =
+  | { mode: "update"; turnstileSiteKey?: never }
+  | { mode: CaptchaMode; turnstileSiteKey: string };
 
-export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstileSiteKey?: string }) {
+export function AuthForm(props: AuthFormProps) {
+  const mode = props.mode;
+  const turnstileSiteKey = mode === "update" ? "" : props.turnstileSiteKey;
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -20,7 +26,8 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
     setCaptchaToken(token);
     if (token) setCaptchaError("");
   }, []);
-  const captchaRequired = mode !== "update" && Boolean(turnstileSiteKey);
+  const captchaRequired = mode !== "update";
+  const captchaAction = mode === "login" ? "auth_login" : mode === "signup" ? "auth_signup" : "auth_password_reset";
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,7 +49,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
         const { error: authError } = await supabase.auth.signInWithPassword({
           email,
           password,
-          options: captchaToken ? { captchaToken } : undefined,
+          options: { captchaToken },
         });
         if (authError) throw authError;
         const requestedNext = new URLSearchParams(window.location.search).get("next");
@@ -54,7 +61,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
           options: {
             data: { full_name: fullName },
             emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
-            captchaToken: captchaToken || undefined,
+            captchaToken,
           },
         });
         if (authError) throw authError;
@@ -62,7 +69,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
       } else if (mode === "forgot") {
         const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/auth/callback?next=/auth/update-password`,
-          captchaToken: captchaToken || undefined,
+          captchaToken,
         });
         if (authError) throw authError;
         setMessage("If that address exists, a password-reset email has been sent.");
@@ -117,7 +124,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
               <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} required maxLength={128} />
             </label>
           ) : null}
-          {mode !== "update" ? <Turnstile ref={turnstileRef} siteKey={turnstileSiteKey} onToken={onToken} onError={setCaptchaError} /> : null}
+          {mode !== "update" ? <Turnstile ref={turnstileRef} siteKey={turnstileSiteKey} action={captchaAction} onToken={onToken} onError={setCaptchaError} /> : null}
           {mode === "signup" && message ? <p className="success" role="status">{message}</p> : null}
           {captchaError ? <p className="error" role="alert">{captchaError}</p> : null}
           <button className="button" type="submit" disabled={busy || (captchaRequired && !captchaToken)}>{busy ? "Working…" : title}</button>

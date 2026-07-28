@@ -10,7 +10,7 @@ export default async function SecuritySettingsPage() {
     <AppShell>
       <h1 className="page-title">Security settings</h1>
       <p className="page-lede">Protect organizer access with an authenticator app.</p>
-      <div style={{ marginTop: 32 }}><MfaManager /></div>
+      <div className="security-settings-content"><MfaManager /></div>
     </AppShell>
   );
 }

@@ -69,7 +69,7 @@ export function ApplicationForm({ initial }: { initial: Application | null }) {
 
   return (
     <form className="card stack" onSubmit={submit}>
-      <div className="inline" style={{ justifyContent: "space-between" }}>
+      <div className="inline application-heading">
         <div>
           <h2>Application</h2>
           <p className="help">Sensitive fields are visible only to authorized organizers.</p>
@@ -79,7 +79,7 @@ export function ApplicationForm({ initial }: { initial: Application | null }) {
       {error ? <p className="error" role="alert">{error}</p> : null}
       {message ? <p className="success" role="status">{message}</p> : null}
       {locked ? <p className="warning">This application is locked because a final decision has been recorded.</p> : null}
-      <fieldset className="stack" disabled={locked || busy !== null} style={{ border: 0, padding: 0, margin: 0 }}>
+      <fieldset className="stack application-fieldset" disabled={locked || busy !== null}>
         <div className="grid-2">
           <label>Legal name<input name="legalName" required maxLength={120} defaultValue={initial?.legal_name ?? ""} autoComplete="name" /></label>
           <label>Preferred name<input name="preferredName" maxLength={80} defaultValue={initial?.preferred_name ?? ""} /></label>

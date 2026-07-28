@@ -178,6 +178,13 @@ input[type="checkbox"] { width: 20px; height: 20px; }
 .site-footer { border-top: 2px solid rgba(32,24,39,.12); padding: clamp(18px, 3vh, 24px); text-align: center; color: var(--muted); font-size: clamp(13px, 1.1vw, 14px); }
 
 /* Compact laptop screens: reduce vertical whitespace without shrinking text below readable sizes. */
+.dashboard-home-actions { margin-top: 20px; }
+.dashboard-sections, .security-settings-content { margin-top: 32px; }
+.application-heading { justify-content: space-between; }
+.application-fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.file-upload-field { flex: 1 1 280px; }
+.mfa-qr-code { width: 240px; max-width: 100%; }
+
 @media (max-height: 800px) and (min-width: 761px) {
   .app-main { padding-top: 30px; padding-bottom: 54px; }
   .auth-layout { padding-block: 28px; }

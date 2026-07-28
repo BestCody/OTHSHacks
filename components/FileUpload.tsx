@@ -44,7 +44,7 @@ export function FileUpload({ files }: { files: FileRecord[] }) {
       {error ? <p className="error" role="alert">{error}</p> : null}
       {message ? <p className="success" role="status">{message}</p> : null}
       <form className="inline" onSubmit={upload}>
-        <label style={{ flex: "1 1 280px" }}>
+        <label className="file-upload-field">
           Upload résumé, consent form, or supporting document
           <input name="file" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" required />
         </label>

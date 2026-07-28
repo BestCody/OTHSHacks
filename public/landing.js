@@ -69,29 +69,26 @@ const menuButton = document.getElementById('menu-btn');
     });
   });
 
-  const canTilt = !prefersReducedMotion;
+  const tiltClasses = [
+    'tilt-top-left',
+    'tilt-top-right',
+    'tilt-bottom-left',
+    'tilt-bottom-right',
+  ];
 
-  if (canTilt) {
+  if (!prefersReducedMotion) {
     document.querySelectorAll('[data-pointer-tilt]').forEach(element => {
-      const maxTilt = Number(element.dataset.pointerTilt) || 4;
-
       element.addEventListener('pointermove', event => {
         const rect = element.getBoundingClientRect();
-        const x = (event.clientX - rect.left) / rect.width;
-        const y = (event.clientY - rect.top) / rect.height;
-        const rotateY = (x - .5) * maxTilt * 2;
-        const rotateX = (.5 - y) * maxTilt * 2;
-        const rotateZ = (x - .5) * maxTilt * .22;
+        const horizontal = event.clientX < rect.left + rect.width / 2 ? 'left' : 'right';
+        const vertical = event.clientY < rect.top + rect.height / 2 ? 'top' : 'bottom';
 
-        element.style.setProperty('--tilt-x', `${rotateX.toFixed(2)}deg`);
-        element.style.setProperty('--tilt-y', `${rotateY.toFixed(2)}deg`);
-        element.style.setProperty('--tilt-z', `${rotateZ.toFixed(2)}deg`);
+        element.classList.remove(...tiltClasses);
+        element.classList.add(`tilt-${vertical}-${horizontal}`);
       });
 
       element.addEventListener('pointerleave', () => {
-        element.style.setProperty('--tilt-x', '0deg');
-        element.style.setProperty('--tilt-y', '0deg');
-        element.style.setProperty('--tilt-z', '0deg');
+        element.classList.remove(...tiltClasses);
       });
     });
   }

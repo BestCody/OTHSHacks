@@ -87,7 +87,7 @@ export function MfaManager() {
       {enrollment ? (
         <form className="stack" onSubmit={verify}>
           <p>Scan this QR code with your authenticator app.</p>
-          <img src={enrollment.qrCode} alt="QR code for adding OTHacks to an authenticator app" style={{ width: 240, maxWidth: "100%" }} />
+          <img className="mfa-qr-code" src={enrollment.qrCode} alt="QR code for adding OTHacks to an authenticator app" />
           <p className="help">Manual secret: <code>{enrollment.secret}</code></p>
           <label>Six-digit code<input name="code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" minLength={6} maxLength={6} required /></label>
           <button className="button" type="submit" disabled={busy}>Verify and enable MFA</button>

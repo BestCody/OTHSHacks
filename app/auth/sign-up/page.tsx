@@ -1,6 +1,6 @@
 import { AuthForm } from "@/components/AuthForm";
-import { getOptionalPublicEnv } from "@/lib/env";
+import { getTurnstileSiteKey } from "@/lib/env";
 
 export default function SignUpPage() {
-  return <AuthForm mode="signup" turnstileSiteKey={getOptionalPublicEnv().turnstileSiteKey} />;
+  return <AuthForm mode="signup" turnstileSiteKey={getTurnstileSiteKey()} />;
 }

@@ -27,9 +27,34 @@ export function getServerEnv(): ServerEnv {
   return cached;
 }
 
+const turnstileTestSiteKeys = new Set([
+  "1x00000000000000000000AA",
+  "2x00000000000000000000AB",
+  "1x00000000000000000000BB",
+  "2x00000000000000000000BB",
+  "3x00000000000000000000FF",
+]);
+
+function isProductionDeployment() {
+  return process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
+}
+
+export function getTurnstileSiteKey() {
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+
+  if (!siteKey) {
+    throw new Error("NEXT_PUBLIC_TURNSTILE_SITE_KEY is required. Authentication is disabled until Turnstile is configured.");
+  }
+
+  if (isProductionDeployment() && turnstileTestSiteKeys.has(siteKey)) {
+    throw new Error("A Cloudflare Turnstile test sitekey cannot be used in production.");
+  }
+
+  return siteKey;
+}
+
 export function getOptionalPublicEnv() {
   return {
-    turnstileSiteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "",
     plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN ?? "",
   };
 }

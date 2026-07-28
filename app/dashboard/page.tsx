@@ -19,10 +19,10 @@ export default async function DashboardPage() {
     <AppShell>
       <h1 className="page-title">Your OTHacks application</h1>
       <p className="page-lede">Save a draft at any time. Submit only when the required information is complete.</p>
-      <div className="inline" style={{ marginTop: 20 }}>
+      <div className="inline dashboard-home-actions">
         <Link className="button secondary" href="/">← Return home</Link>
       </div>
-      <div className="stack" style={{ marginTop: 32 }}>
+      <div className="stack dashboard-sections">
         <ApplicationForm initial={application} />
         <FileUpload files={files ?? []} />
       </div>

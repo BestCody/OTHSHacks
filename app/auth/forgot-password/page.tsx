@@ -1,6 +1,6 @@
 import { AuthForm } from "@/components/AuthForm";
-import { getOptionalPublicEnv } from "@/lib/env";
+import { getTurnstileSiteKey } from "@/lib/env";
 
 export default function ForgotPasswordPage() {
-  return <AuthForm mode="forgot" turnstileSiteKey={getOptionalPublicEnv().turnstileSiteKey} />;
+  return <AuthForm mode="forgot" turnstileSiteKey={getTurnstileSiteKey()} />;
 }
