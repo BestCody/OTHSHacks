@@ -93,8 +93,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
           {mode !== "forgot" ? (
             <label>
               Password
-              <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} required minLength={12} maxLength={128} />
-              {mode !== "login" ? <span className="help">Use at least 12 characters and a password manager.</span> : null}
+              <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} required maxLength={128} />
             </label>
           ) : null}
           {mode !== "update" ? <Turnstile siteKey={turnstileSiteKey} onToken={onToken} /> : null}

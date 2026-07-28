@@ -32,7 +32,7 @@ export const statusSchema = z.object({
 
 export const authSchema = z.object({
   email: z.string().trim().email().max(254),
-  password: z.string().min(12).max(128),
+  password: z.string().min(1).max(128),
   fullName: trimmed(120).optional(),
   captchaToken: z.string().optional(),
 });
