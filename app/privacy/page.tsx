@@ -1,7 +1,5 @@
 import { AppShell } from "@/components/AppShell";
 
-export const metadata = { title: "Privacy notice" };
-
 export default function PrivacyPage() {
   return (
     <AppShell>

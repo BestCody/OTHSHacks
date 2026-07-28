@@ -1,6 +1,5 @@
 import { AppShell } from "@/components/AppShell";
 
-export const metadata = { title: "Code of conduct" };
 
 export default function CodeOfConductPage() {
   return (

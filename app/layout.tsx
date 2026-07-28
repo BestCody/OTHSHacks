@@ -5,7 +5,7 @@ import { getOptionalPublicEnv } from "@/lib/env";
 import { ClientErrorReporter } from "@/components/ClientErrorReporter";
 
 export const metadata: Metadata = {
-  title: { default: "OTHacks", template: "%s · OTHacks" },
+  title: "OTHacks",
   description: "OTHacks registration and organizer portal.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   icons: { icon: "/assets/othacks-mascot-head.png" },

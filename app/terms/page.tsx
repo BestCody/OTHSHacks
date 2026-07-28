@@ -1,7 +1,5 @@
 import { AppShell } from "@/components/AppShell";
 
-export const metadata = { title: "Terms of use" };
-
 export default function TermsPage() {
   return (
     <AppShell>

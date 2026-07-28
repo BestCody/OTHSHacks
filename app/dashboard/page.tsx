@@ -4,7 +4,6 @@ import { FileUpload } from "@/components/FileUpload";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "Application" };
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
