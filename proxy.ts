@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/proxy";
+import { getSafeAuthRedirect } from "@/lib/safe-redirect";
 
 const protectedApplicant = ["/dashboard"];
 const protectedOrganizer = ["/organizer"];
@@ -42,7 +43,7 @@ export async function proxy(request: NextRequest) {
   if ([...protectedApplicant, ...protectedOrganizer].some((prefix) => path.startsWith(prefix)) && !userId) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
-    url.searchParams.set("next", path);
+    url.searchParams.set("next", getSafeAuthRedirect(path));
     const redirect = NextResponse.redirect(url);
     redirect.headers.set("Content-Security-Policy", csp);
     return copyCookies(response, redirect);

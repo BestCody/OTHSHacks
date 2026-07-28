@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FormEvent, useCallback, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Turnstile } from "@/components/Turnstile";
+import { getSafeAuthRedirect } from "@/lib/safe-redirect";
 
 type Mode = "login" | "signup" | "forgot" | "update";
 
@@ -33,9 +34,8 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
           options: captchaToken ? { captchaToken } : undefined,
         });
         if (authError) throw authError;
-        const requestedNext = new URLSearchParams(window.location.search).get("next") ?? "";
-        const next = requestedNext.startsWith("/") && !requestedNext.startsWith("//") ? requestedNext : "/dashboard";
-        window.location.assign(next);
+        const requestedNext = new URLSearchParams(window.location.search).get("next");
+        window.location.assign(getSafeAuthRedirect(requestedNext));
       } else if (mode === "signup") {
         const { error: authError } = await supabase.auth.signUp({
           email,
