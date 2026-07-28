@@ -1,0 +1,3 @@
+-- Local-only seed data. Do not use real participant data.
+-- After creating a local user through Supabase Auth, promote it manually:
+-- update public.profiles set role = 'admin' where email = 'organizer@example.com';
