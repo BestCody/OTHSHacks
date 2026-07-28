@@ -13,9 +13,13 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaError, setCaptchaError] = useState("");
   const turnstileRef = useRef<TurnstileHandle>(null);
   const submittingRef = useRef(false);
-  const onToken = useCallback((token: string) => setCaptchaToken(token), []);
+  const onToken = useCallback((token: string) => {
+    setCaptchaToken(token);
+    if (token) setCaptchaError("");
+  }, []);
   const captchaRequired = mode !== "update" && Boolean(turnstileSiteKey);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -113,8 +117,9 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
               <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} required maxLength={128} />
             </label>
           ) : null}
-          {mode !== "update" ? <Turnstile ref={turnstileRef} siteKey={turnstileSiteKey} onToken={onToken} /> : null}
+          {mode !== "update" ? <Turnstile ref={turnstileRef} siteKey={turnstileSiteKey} onToken={onToken} onError={setCaptchaError} /> : null}
           {mode === "signup" && message ? <p className="success" role="status">{message}</p> : null}
+          {captchaError ? <p className="error" role="alert">{captchaError}</p> : null}
           <button className="button" type="submit" disabled={busy || (captchaRequired && !captchaToken)}>{busy ? "Working…" : title}</button>
         </form>
         <div className="auth-links">
