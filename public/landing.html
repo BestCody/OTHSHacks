@@ -28,10 +28,11 @@
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 96px; }
     html, body { max-width: 100%; overflow-x: clip; }
     body {
       margin: 0;
+      padding-top: 76px;
       color: var(--ink);
       background: var(--cream);
       font-family: "Nunito", system-ui, sans-serif;
@@ -99,8 +100,10 @@
 
     /* Header */
     .site-header {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
       background: rgba(255,248,233,.93);
       backdrop-filter: blur(14px);
@@ -231,15 +234,13 @@
     .title-row .icon,
     .feature-illustration svg,
     .sponsor-peek,
-    .horns,
-    .cta-mascot {
+    .horns {
       transition: transform .22s ease, filter .22s ease;
     }
     .title-row:hover .icon { transform: rotate(5deg) scale(1.1); }
     .feature-illustration:hover svg { transform: translateY(-7px) rotate(1deg) scale(1.035); }
     .sponsor-peek:hover { transform: rotate(-4deg) translateY(-9px) scale(1.08); }
     .organizer:hover .horns { transform: translateX(-50%) translateY(-5px) rotate(4deg) scale(1.06); }
-    .cta-card:hover .cta-mascot { transform: translateY(-9px) rotate(2deg) scale(1.025); }
     .btn:active { transform: translateY(2px) scale(.98); box-shadow: 2px 2px 0 var(--ink); }
     summary:hover { background: #fff3dc; }
 
@@ -370,31 +371,7 @@
     details[open] summary::before { content: "–"; }
     details p { margin: 0; padding: 0 22px 21px; color: var(--muted); line-height: 1.55; font-weight: 700; }
 
-    /* CTA and footer */
-    .cta { padding: 90px 0 76px; background: var(--cream); }
-    .cta-card {
-      min-height: 350px;
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      align-items: center;
-      padding: 54px 58px;
-      border: 4px solid var(--ink);
-      border-radius: 36px;
-      background: var(--red);
-      color: white;
-      box-shadow: 10px 12px 0 var(--ink);
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-card::after { content: ""; position: absolute; inset: auto -5% -75px; height: 170px; background: var(--red-dark); border-top: 4px solid var(--ink); border-radius: 50% 50% 0 0; }
-    .cta-content { position: relative; z-index: 3; }
-    .cta h2 { max-width: 610px; font-size: clamp(44px,5.8vw,72px); }
-    .cta p { color: #ffe9ed; font-size: 18px; line-height: 1.6; font-weight: 800; max-width: 520px; }
-    .cta .btn { margin-top: 10px; }
-    .cta-mascot { width: 300px; justify-self: end; align-self: end; position: relative; z-index: 3; margin-bottom: -55px; }
-    .cta-flame { position: absolute; z-index: 2; width: 92px; bottom: 15px; }
-    .cta-flame.left { left: 18px; }
-    .cta-flame.right { right: 18px; transform: scaleX(-1); }
+    /* Footer */
     .footer { background: var(--ink); color: var(--cream); padding: 34px 0; }
     .footer-grid { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
     .footer .brand { font-size: 19px; }
@@ -453,13 +430,12 @@
       .faq-layout { grid-template-columns: 1fr; }
       .faq-art { position: relative; width: 240px; margin: 0 auto -25px; order: 2; }
       .faq-copy h2, .faq-copy > p { text-align: center; margin-inline: auto; }
-      .cta-card { grid-template-columns: 1fr; padding-bottom: 0; text-align: center; }
-      .cta-content { margin-inline: auto; }
-      .cta-mascot { justify-self: center; margin-top: 10px; }
     }
 
     /* Mobile */
     @media (max-width: 600px) {
+      html { scroll-padding-top: 84px; }
+      body { padding-top: 68px; }
       .shell { width: min(100% - 24px, 520px); }
       .section { padding: 78px 0; }
       .nav { min-height: 68px; }
@@ -491,12 +467,6 @@
       .faq-art { width: 190px; }
       .faq-copy h2 { font-size: 44px; }
       summary { padding-left: 18px; font-size: 15px; }
-      .cta { padding-top: 68px; }
-      .cta-card { padding: 40px 22px 0; border-radius: 28px; }
-      .cta h2 { font-size: 47px; }
-      .cta p { font-size: 16px; }
-      .cta .btn { width: 100%; }
-      .cta-mascot { width: 240px; margin-bottom: -44px; }
       .footer-grid { justify-content: center; text-align: center; flex-direction: column; }
     }
   </style>
@@ -542,10 +512,10 @@
       <a href="#sponsors">Sponsors</a>
       <a href="#team">Team</a>
       <a href="#faq">FAQ</a>
-      <a class="mobile-register" href="#register">Register</a>
+      <a class="mobile-register" href="/auth/sign-up">Register</a>
     </nav>
     <div class="nav-actions">
-      <a class="btn btn-primary btn-small" href="#register">Register <span aria-hidden="true">↗</span></a>
+      <a class="btn btn-primary btn-small" href="/auth/sign-up">Register <span aria-hidden="true">↗</span></a>
       <button class="menu-btn" id="menu-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
@@ -562,7 +532,7 @@
           <h1>Raise a little hell.<br />Build something <span class="heavenly">heavenly</span> good.</h1>
           <p>OTHacks is a beginner-friendly hackathon for high schoolers, hosted right in the Devils’ den at Oakville Trafalgar High School. One weekend, endless mischief, real projects.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#register">Register now <span aria-hidden="true">→</span></a>
+            <a class="btn btn-primary" href="/auth/sign-up">Register now <span aria-hidden="true">→</span></a>
             <a class="btn btn-light" href="#about">See what’s inside <span aria-hidden="true">↓</span></a>
           </div>
         </div>
@@ -762,20 +732,6 @@
     </div>
   </section>
 
-  <section class="cta" id="register">
-    <div class="shell">
-      <div class="cta-card" data-reveal>
-        <svg class="cta-flame left" aria-hidden="true"><use href="#flame" /></svg>
-        <svg class="cta-flame right" aria-hidden="true"><use href="#flame" /></svg>
-        <div class="cta-content">
-          <h2>Ready to raise a little hell?</h2>
-          <p>Spots are limited. Registration closes when the pitchforks run out.</p>
-          <a class="btn btn-light" href="/auth/sign-up">Register for OTHacks <span aria-hidden="true">→</span></a>
-        </div>
-        <svg class="cta-mascot" viewBox="0 0 620 750" aria-hidden="true"><use href="#devil-body" /></svg>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer class="footer">
