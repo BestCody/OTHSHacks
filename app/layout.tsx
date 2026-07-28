@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Script from "next/script";
 import "./globals.css";
 import { getOptionalPublicEnv } from "@/lib/env";
@@ -11,8 +12,10 @@ export const metadata: Metadata = {
   icons: { icon: "/assets/othacks-mascot-head.png" },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const { plausibleDomain } = getOptionalPublicEnv();
+
   return (
     <html lang="en">
       <body>
@@ -24,6 +27,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             data-domain={plausibleDomain}
             src="https://plausible.io/js/script.js"
             strategy="afterInteractive"
+            nonce={nonce}
           />
         ) : null}
       </body>

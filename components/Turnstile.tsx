@@ -1,6 +1,5 @@
 "use client";
 
-import Script from "next/script";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 
 type TurnstileOptions = {
@@ -156,7 +155,13 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
     const renderTimer = window.setInterval(() => {
       renderWidget();
       attempts += 1;
-      if (widgetIdRef.current || attempts >= 40) window.clearInterval(renderTimer);
+
+      if (widgetIdRef.current) {
+        window.clearInterval(renderTimer);
+      } else if (attempts >= 40) {
+        window.clearInterval(renderTimer);
+        reportError("Security check script could not load. Disable content blockers and refresh the page.");
+      }
     }, 250);
 
     return () => {
@@ -175,21 +180,9 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
       }
       widgetIdRef.current = null;
     };
-  }, [publishToken, renderWidget, siteKey]);
+  }, [publishToken, renderWidget, reportError, siteKey]);
 
   if (!siteKey) return <p className="help">Bot protection is disabled in this environment.</p>;
 
-  return (
-    <>
-      <Script
-        id="cloudflare-turnstile"
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        strategy="afterInteractive"
-        onLoad={renderWidget}
-        onReady={renderWidget}
-        onError={() => reportError("Security check script could not load. Disable content blockers and refresh the page.")}
-      />
-      <div ref={containerRef} aria-label="Bot verification" />
-    </>
-  );
+  return <div ref={containerRef} aria-label="Bot verification" />;
 });
