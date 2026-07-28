@@ -7,7 +7,7 @@ export default function NotFound() {
         <img className="auth-mascot" src="/assets/othacks-mascot.png" alt="OTHacks devil mascot" />
         <h1 className="page-title">Page not found</h1>
         <p className="page-lede">This pitchfork points nowhere.</p>
-        <Link className="button" href="/landing.html">Return home</Link>
+        <Link className="button" href="/">Return home</Link>
       </section>
     </main>
   );

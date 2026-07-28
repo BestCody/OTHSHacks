@@ -13,6 +13,27 @@ const securityHeaders = [
 const config: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+
+  async redirects() {
+    return [
+      {
+        source: "/landing.html",
+        destination: "/",
+        permanent: true,
+      },
+    ];
+  },
+
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/",
+          destination: "/landing.html",
+        },
+      ],
+    };
+  },
   async headers() {
     return [
       {

@@ -19,6 +19,36 @@ const menuButton = document.getElementById('menu-btn');
 
   navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
 
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', event => {
+      const selector = link.getAttribute('href');
+      if (!selector || selector === '#') return;
+
+      const target = document.querySelector(selector);
+      if (!target) return;
+
+      event.preventDefault();
+      target.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
+
+      history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+    });
+  });
+
+  if (window.location.hash) {
+    const initialTarget = document.querySelector(window.location.hash);
+    if (initialTarget) {
+      requestAnimationFrame(() => {
+        initialTarget.scrollIntoView({ block: 'start' });
+        history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+      });
+    }
+  }
+
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -39,7 +69,7 @@ const menuButton = document.getElementById('menu-btn');
     });
   });
 
-  const canTilt = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canTilt = !prefersReducedMotion;
 
   if (canTilt) {
     document.querySelectorAll('[data-pointer-tilt]').forEach(element => {

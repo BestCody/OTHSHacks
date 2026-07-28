@@ -14,7 +14,7 @@ export function LogoutButton() {
         setBusy(true);
         const supabase = createClient();
         await supabase.auth.signOut();
-        window.location.assign("/landing.html");
+        window.location.assign("/");
       }}
     >
       {busy ? "Signing out…" : "Sign out"}

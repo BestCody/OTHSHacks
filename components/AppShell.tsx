@@ -9,12 +9,12 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <Link className="brand-link" href="/landing.html">
+        <Link className="brand-link" href="/">
           <img src="/assets/othacks-mascot.png" alt="" aria-hidden="true" />
           <span>OTHacks</span>
         </Link>
         <nav className="app-nav" aria-label="Application navigation">
-          <Link href="/landing.html">Home</Link>
+          <Link href="/">Home</Link>
           {user ? <Link href="/dashboard">Application</Link> : null}
           {user ? <Link href="/settings/security">Security</Link> : null}
           {role === "organizer" || role === "admin" ? <Link href="/organizer">Organizer</Link> : null}
