@@ -5,9 +5,6 @@ export default function PrivacyPage() {
     <AppShell>
       <article className="legal">
         <h1 className="page-title">Privacy notice</h1>
-        <p className="warning"><strong>Organizer action required:</strong> have Oakville Trafalgar High School and the applicable school board review this notice before collecting real participant data.</p>
-        <p>OTHacks collects only information needed to operate the event, review applications, provide meals and accessibility support, communicate decisions, respond to emergencies, and keep the event safe.</p>
-        <h2>Information we collect</h2>
         <p>Account details, school and grade, application responses, emergency contact information, dietary and accessibility requirements, uploaded documents, security logs, and communication preferences.</p>
         <h2>How it is used</h2>
         <p>Information is used only for event administration, participant support, safety, fraud prevention, legal compliance, and aggregate event reporting. We do not sell personal information.</p>
