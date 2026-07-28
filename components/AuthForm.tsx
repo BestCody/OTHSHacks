@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Turnstile } from "@/components/Turnstile";
+import { Turnstile, type TurnstileHandle } from "@/components/Turnstile";
 import { getSafeAuthRedirect } from "@/lib/safe-redirect";
 
 type Mode = "login" | "signup" | "forgot" | "update";
@@ -13,10 +13,17 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const submittingRef = useRef(false);
   const onToken = useCallback((token: string) => setCaptchaToken(token), []);
+  const captchaRequired = mode !== "update" && Boolean(turnstileSiteKey);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submittingRef.current) return;
+    if (captchaRequired && !captchaToken) return;
+
+    submittingRef.current = true;
     setBusy(true);
     setError("");
     setMessage("");
@@ -61,9 +68,19 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
         setMessage("Password updated. You can continue to your dashboard.");
       }
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Authentication failed.");
+      const authMessage = caught instanceof Error ? caught.message : "Authentication failed.";
+      setError(
+        authMessage.toLowerCase().includes("timeout-or-duplicate")
+          ? "The security check expired. It has been refreshed; please try again."
+          : authMessage,
+      );
     } finally {
+      submittingRef.current = false;
       setBusy(false);
+      if (captchaRequired) {
+        setCaptchaToken("");
+        turnstileRef.current?.reset();
+      }
     }
   }
 
@@ -96,9 +113,9 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
               <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} required maxLength={128} />
             </label>
           ) : null}
-          {mode !== "update" ? <Turnstile siteKey={turnstileSiteKey} onToken={onToken} /> : null}
+          {mode !== "update" ? <Turnstile ref={turnstileRef} siteKey={turnstileSiteKey} onToken={onToken} /> : null}
           {mode === "signup" && message ? <p className="success" role="status">{message}</p> : null}
-          <button className="button" type="submit" disabled={busy}>{busy ? "Working…" : title}</button>
+          <button className="button" type="submit" disabled={busy || (captchaRequired && !captchaToken)}>{busy ? "Working…" : title}</button>
         </form>
         <div className="auth-links">
           {mode !== "login" ? <Link href="/auth/login">Sign in</Link> : <Link href="/auth/sign-up">Create account</Link>}
