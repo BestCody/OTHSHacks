@@ -5,6 +5,8 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 
 type TurnstileOptions = {
   sitekey: string;
   callback: (token: string) => void;
+  execution: "render";
+  appearance: "interaction-only";
   "expired-callback": () => void;
   "timeout-callback": () => void;
   "error-callback": (errorCode: string) => boolean;
@@ -88,6 +90,8 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
       widgetIdRef.current = api.render(element, {
         sitekey: siteKey,
         callback: publishToken,
+        execution: "render",
+        appearance: "interaction-only",
         "expired-callback": () => publishToken(""),
         "timeout-callback": () => publishToken(""),
         "error-callback": (errorCode: string) => {
