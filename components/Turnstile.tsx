@@ -1,14 +1,14 @@
 "use client";
 
 import Script from "next/script";
-import { forwardRef, useCallback, useEffect, useId, useImperativeHandle, useRef } from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 
 declare global {
   interface Window {
     turnstile?: {
       render: (element: HTMLElement, options: Record<string, unknown>) => string;
       reset: (id: string) => void;
-      getResponse: (id: string) => string;
+      getResponse?: (id: string) => string;
       remove: (id: string) => void;
     };
   }
@@ -27,64 +27,94 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
   { siteKey, onToken },
   ref,
 ) {
-  const elementId = useId().replace(/:/g, "");
+  const containerRef = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | null>(null);
-  const lastToken = useRef("");
 
-  const syncToken = useCallback((token: string) => {
-    if (lastToken.current === token) return;
-    lastToken.current = token;
-    onToken(token);
+  const clearToken = useCallback(() => {
+    onToken("");
   }, [onToken]);
 
   const renderWidget = useCallback(() => {
-    const element = document.getElementById(elementId);
-    if (!siteKey || !element || !window.turnstile || widgetId.current) return;
+    const element = containerRef.current;
+    const turnstile = window.turnstile;
+    if (!siteKey || !element || !turnstile || widgetId.current) return;
 
-    widgetId.current = window.turnstile.render(element, {
-      sitekey: siteKey,
-      execution: "render",
-      appearance: "always",
-      callback: (token: string) => syncToken(token),
-      "expired-callback": () => syncToken(""),
-      "timeout-callback": () => syncToken(""),
-      "error-callback": () => syncToken(""),
-      "refresh-expired": "auto",
-      "refresh-timeout": "auto",
-      retry: "auto",
-      theme: "light",
-    });
-  }, [elementId, siteKey, syncToken]);
+    try {
+      widgetId.current = turnstile.render(element, {
+        sitekey: siteKey,
+        callback: (token: string) => onToken(token),
+        "expired-callback": clearToken,
+        "timeout-callback": clearToken,
+        "error-callback": clearToken,
+        "refresh-expired": "auto",
+        "refresh-timeout": "auto",
+        retry: "auto",
+        size: "flexible",
+        theme: "light",
+      });
+    } catch {
+      clearToken();
+    }
+  }, [clearToken, onToken, siteKey]);
 
   useImperativeHandle(ref, () => ({
     reset() {
-      if (widgetId.current && window.turnstile) {
-        window.turnstile.reset(widgetId.current);
+      clearToken();
+
+      const id = widgetId.current;
+      const turnstile = window.turnstile;
+      if (!id || !turnstile) return;
+
+      try {
+        turnstile.reset(id);
+      } catch {
+        try {
+          turnstile.remove(id);
+        } catch {
+          // The widget may already have been removed by Cloudflare.
+        }
+        widgetId.current = null;
+        window.setTimeout(renderWidget, 0);
       }
-      syncToken("");
     },
-  }), [syncToken]);
+  }), [clearToken, renderWidget]);
 
   useEffect(() => {
-    if (!siteKey) return;
+    if (!siteKey) {
+      clearToken();
+      return;
+    }
 
     renderWidget();
     const renderTimer = window.setInterval(renderWidget, 100);
     const responseTimer = window.setInterval(() => {
-      if (!widgetId.current || !window.turnstile) return;
-      syncToken(window.turnstile.getResponse(widgetId.current) || "");
+      const id = widgetId.current;
+      const getResponse = window.turnstile?.getResponse;
+      if (!id || !getResponse) return;
+
+      try {
+        const token = getResponse(id);
+        if (token) onToken(token);
+      } catch {
+        // The normal success callback remains the primary token source.
+      }
     }, 250);
 
     return () => {
       window.clearInterval(renderTimer);
       window.clearInterval(responseTimer);
-      if (widgetId.current && window.turnstile) {
-        window.turnstile.remove(widgetId.current);
-        widgetId.current = null;
+
+      const id = widgetId.current;
+      if (id && window.turnstile) {
+        try {
+          window.turnstile.remove(id);
+        } catch {
+          // The widget may already have cleaned itself up.
+        }
       }
-      lastToken.current = "";
+      widgetId.current = null;
     };
-  }, [renderWidget, siteKey, syncToken]);
+  }, [clearToken, onToken, renderWidget, siteKey]);
 
   if (!siteKey) return <p className="help">Bot protection is disabled in this environment.</p>;
 
@@ -94,8 +124,9 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
         src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         strategy="afterInteractive"
         onReady={renderWidget}
+        onError={clearToken}
       />
-      <div id={elementId} aria-label="Bot verification" />
+      <div ref={containerRef} aria-label="Bot verification" />
     </>
   );
 });
