@@ -18,7 +18,6 @@ type TurnstileOptions = {
 };
 
 type TurnstileApi = {
-  ready?: (callback: () => void) => void;
   render: (element: HTMLElement, options: TurnstileOptions) => string;
   reset: (id: string) => void;
   remove: (id: string) => void;
@@ -82,37 +81,30 @@ export const Turnstile = forwardRef<TurnstileHandle, TurnstileProps>(function Tu
 
   const renderWidget = useCallback(() => {
     const api = window.turnstile;
-    if (!siteKey || !api || widgetIdRef.current) return;
+    const element = containerRef.current;
+    if (!siteKey || !api || !element || !mountedRef.current || widgetIdRef.current) return;
 
-    const render = () => {
-      const element = containerRef.current;
-      if (!mountedRef.current || !element || widgetIdRef.current) return;
-
-      try {
-        widgetIdRef.current = api.render(element, {
-          sitekey: siteKey,
-          callback: publishToken,
-          "expired-callback": () => publishToken(""),
-          "timeout-callback": () => publishToken(""),
-          "error-callback": (errorCode: string) => {
-            reportError(describeTurnstileError(errorCode));
-            return true;
-          },
-          "unsupported-callback": () => reportError("This browser cannot run the security check. Try an updated browser."),
-          "refresh-expired": "auto",
-          "refresh-timeout": "auto",
-          retry: "auto",
-          "retry-interval": 2000,
-          size: "flexible",
-          theme: "light",
-        });
-      } catch {
-        reportError("Security check could not start. Refresh the page and try again.");
-      }
-    };
-
-    if (api.ready) api.ready(render);
-    else render();
+    try {
+      widgetIdRef.current = api.render(element, {
+        sitekey: siteKey,
+        callback: publishToken,
+        "expired-callback": () => publishToken(""),
+        "timeout-callback": () => publishToken(""),
+        "error-callback": (errorCode: string) => {
+          reportError(describeTurnstileError(errorCode));
+          return true;
+        },
+        "unsupported-callback": () => reportError("This browser cannot run the security check. Try an updated browser."),
+        "refresh-expired": "auto",
+        "refresh-timeout": "auto",
+        retry: "auto",
+        "retry-interval": 2000,
+        size: "flexible",
+        theme: "light",
+      });
+    } catch {
+      reportError("Security check could not start. Refresh the page and try again.");
+    }
   }, [publishToken, reportError, siteKey]);
 
   useImperativeHandle(ref, () => ({
