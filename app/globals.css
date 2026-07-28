@@ -121,21 +121,37 @@ input[type="checkbox"] { width: 20px; height: 20px; }
 .button:disabled { opacity: .55; cursor: not-allowed; }
 
 .auth-layout {
+  position: relative;
   min-height: 100vh;
   min-height: 100dvh;
   display: grid;
   place-items: center;
+  overflow-y: auto;
   padding: clamp(32px, 7vh, 50px) clamp(12px, 3vw, 18px);
 }
-.auth-card { width: min(500px, 100%); }
-.auth-card .page-title { font-size: clamp(32px, 5vw, 50px); }
+.auth-home-link {
+  position: fixed;
+  top: clamp(12px, 2vw, 20px);
+  left: clamp(12px, 2vw, 20px);
+  z-index: 20;
+  min-height: 40px;
+  padding-inline: clamp(13px, 1.8vw, 18px);
+  border-width: 2px;
+  box-shadow: 3px 4px 0 var(--ink);
+}
+.auth-card {
+  width: min(500px, 100%);
+  justify-self: center;
+  align-self: center;
+}
+.auth-card .page-title { font-size: clamp(32px, 5vw, 50px); text-align: center; }
 .auth-card .button[type="submit"] { width: 100%; }
 .auth-mascot {
   width: clamp(96px, 17vh, 145px);
   margin: clamp(-86px, -10vh, -56px) auto clamp(0px, .5vh, 4px);
   filter: drop-shadow(0 7px 0 rgba(32,24,39,.15));
 }
-.auth-links { display: flex; gap: clamp(10px, 2vw, 14px); justify-content: space-between; flex-wrap: wrap; margin-top: clamp(13px, 2.5vh, 18px); font-size: clamp(14px, 1.4vw, 16px); }
+.auth-links { display: flex; gap: clamp(10px, 2vw, 14px); justify-content: center; flex-wrap: wrap; margin-top: clamp(13px, 2.5vh, 18px); font-size: clamp(14px, 1.4vw, 16px); }
 .auth-links a { font-weight: 800; }
 
 .status-pill { display: inline-flex; border: 2px solid var(--ink); border-radius: 999px; padding: 5px 10px; font-weight: 900; font-size: 13px; background: var(--yellow); }
@@ -177,7 +193,7 @@ input[type="checkbox"] { width: 20px; height: 20px; }
 }
 
 @media (max-height: 680px) and (min-width: 761px) {
-  .auth-layout { align-items: start; padding-block: 18px; }
+  .auth-layout { place-items: center; padding-block: 18px; }
   .auth-card { width: min(470px, 100%); padding: 17px 22px; }
   .auth-card .page-title { font-size: 34px; }
   .auth-mascot { width: 82px; margin-top: -52px; }
@@ -201,6 +217,7 @@ input[type="checkbox"] { width: 20px; height: 20px; }
   .page-title { font-size: clamp(32px, 9vw, 48px); }
   .card { padding: clamp(17px, 4vw, 20px); }
   .auth-layout { padding: 38px 12px 28px; }
+  .auth-home-link { top: 10px; left: 10px; min-height: 38px; padding-inline: 12px; font-size: 14px; }
   .auth-mascot { width: 105px; margin-top: -67px; }
   .file-row { align-items: flex-start; flex-wrap: wrap; }
   .file-row .button, .file-row .status-pill { flex: 0 0 auto; }
@@ -215,7 +232,8 @@ input[type="checkbox"] { width: 20px; height: 20px; }
   .app-main { width: calc(100% - 18px); padding-top: 22px; }
   .card { border-width: 2px; border-radius: 18px; box-shadow: 4px 5px 0 var(--ink); padding: 16px; }
   .page-lede { line-height: 1.5; }
-  .auth-layout { padding-inline: 9px; }
+  .auth-layout { padding: 64px 9px 24px; }
+  .auth-home-link { position: absolute; }
   .auth-card { width: 100%; }
   .auth-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; }
   .auth-links a { min-width: 0; overflow-wrap: anywhere; }

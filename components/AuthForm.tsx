@@ -71,6 +71,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
 
   return (
     <main className="auth-layout">
+      <Link className="button secondary auth-home-link" href="/">← Return home</Link>
       <section className="card auth-card">
         <img className="auth-mascot" src="/assets/othacks-mascot.png" alt="OTHacks devil mascot" />
         <h1 className="page-title">{title}</h1>
@@ -103,7 +104,6 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
           {mode !== "login" ? <Link href="/auth/login">Sign in</Link> : <Link href="/auth/sign-up">Create account</Link>}
           {mode !== "forgot" && mode !== "update" ? <Link href="/auth/forgot-password">Forgot password?</Link> : null}
           {mode === "update" && message ? <Link href="/dashboard">Continue</Link> : null}
-          <Link href="/">Return home</Link>
         </div>
       </section>
     </main>
