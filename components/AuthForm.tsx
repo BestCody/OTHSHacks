@@ -103,6 +103,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
           {mode !== "login" ? <Link href="/auth/login">Sign in</Link> : <Link href="/auth/sign-up">Create account</Link>}
           {mode !== "forgot" && mode !== "update" ? <Link href="/auth/forgot-password">Forgot password?</Link> : null}
           {mode === "update" && message ? <Link href="/dashboard">Continue</Link> : null}
+          <Link href="/">Return home</Link>
         </div>
       </section>
     </main>
