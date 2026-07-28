@@ -47,7 +47,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
           },
         });
         if (authError) throw authError;
-        setMessage("Check your email to verify your account before signing in.");
+        setMessage("Account created successfully. Check your email to verify your account before signing in.");
       } else if (mode === "forgot") {
         const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/auth/callback?next=/auth/update-password`,
@@ -76,7 +76,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
         <img className="auth-mascot" src="/assets/othacks-mascot.png" alt="OTHacks devil mascot" />
         <h1 className="page-title">{title}</h1>
         {error ? <p className="error" role="alert">{error}</p> : null}
-        {message ? <p className="success" role="status">{message}</p> : null}
+        {message && mode !== "signup" ? <p className="success" role="status">{message}</p> : null}
         <form className="stack" onSubmit={submit}>
           {mode === "signup" ? (
             <label>
@@ -97,6 +97,7 @@ export function AuthForm({ mode, turnstileSiteKey = "" }: { mode: Mode; turnstil
             </label>
           ) : null}
           {mode !== "update" ? <Turnstile siteKey={turnstileSiteKey} onToken={onToken} /> : null}
+          {mode === "signup" && message ? <p className="success" role="status">{message}</p> : null}
           <button className="button" type="submit" disabled={busy}>{busy ? "Working…" : title}</button>
         </form>
         <div className="auth-links">
