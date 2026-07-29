@@ -1,0 +1,24 @@
+.message {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.error {
+  color: #a1163e;
+}
+
+.success {
+  color: #1f6a46;
+}
+
+.help {
+  color: var(--muted);
+  font-size: clamp(13px, 1.15vw, 14px);
+  font-weight: 700;
+  line-height: 1.4;
+}
