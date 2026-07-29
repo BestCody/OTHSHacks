@@ -13,6 +13,8 @@ type AuthFormProps =
   | { mode: "update"; turnstileSiteKey?: never }
   | { mode: CaptchaMode; turnstileSiteKey: string };
 
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function AuthForm(props: AuthFormProps) {
   const mode = props.mode;
   const turnstileSiteKey = mode === "update" ? "" : props.turnstileSiteKey;
@@ -39,14 +41,47 @@ export function AuthForm(props: AuthFormProps) {
     setMessage("");
 
     const data = new FormData(event.currentTarget);
-    const email = String(data.get("email") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim().toLowerCase();
     const password = String(data.get("password") ?? "");
     const confirmPassword = String(data.get("confirmPassword") ?? "");
     const fullName = String(data.get("fullName") ?? "").trim();
 
-    if ((mode === "signup" || mode === "update") && password !== confirmPassword) {
-      setError("The passwords do not match.");
+    if (mode === "signup" && fullName.length < 2) {
+      setError("Full name should be at least 2 characters.");
       return;
+    }
+
+    if (mode !== "update") {
+      if (!email) {
+        setError("Email is required.");
+        return;
+      }
+      if (!emailPattern.test(email)) {
+        setError("Enter a valid email address.");
+        return;
+      }
+    }
+
+    if (mode !== "forgot") {
+      if (!password) {
+        setError("Password is required.");
+        return;
+      }
+      if (password.length < 6) {
+        setError("Password should be at least 6 characters.");
+        return;
+      }
+    }
+
+    if (mode === "signup" || mode === "update") {
+      if (!confirmPassword) {
+        setError("Confirm your password.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        setError("The passwords do not match.");
+        return;
+      }
     }
 
     submittingRef.current = true;
@@ -64,6 +99,18 @@ export function AuthForm(props: AuthFormProps) {
         const requestedNext = new URLSearchParams(window.location.search).get("next");
         window.location.assign(getSafeAuthRedirect(requestedNext));
       } else if (mode === "signup") {
+        const response = await fetch("/api/auth/email-in-use", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const result = await response.json() as { inUse?: boolean; error?: string };
+        if (!response.ok) throw new Error(result.error ?? "Email availability check failed.");
+        if (result.inUse) {
+          setError("Email already in use.");
+          return;
+        }
+
         const { error: authError } = await supabase.auth.signUp({
           email,
           password,
@@ -74,7 +121,7 @@ export function AuthForm(props: AuthFormProps) {
           },
         });
         if (authError) throw authError;
-        setMessage("Check your email for a verification link. If this address is already registered, sign in or reset your password instead.");
+        setMessage("Check your email for a verification link.");
       } else if (mode === "forgot") {
         const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
@@ -98,7 +145,7 @@ export function AuthForm(props: AuthFormProps) {
         normalized.includes("timeout-or-duplicate")
           ? "The security check expired. It has been refreshed; please try again."
           : mode === "signup" && duplicateEmail
-            ? "An account with this email already exists. Sign in or reset your password instead."
+            ? "Email already in use."
             : authMessage,
       );
     } finally {
@@ -119,7 +166,7 @@ export function AuthForm(props: AuthFormProps) {
       <section className="card auth-card">
         <img className="auth-mascot" src="/assets/othacks-mascot.png" alt="OTHacks devil mascot" />
         <h1 className="page-title">{title}</h1>
-        <form className="stack" onSubmit={submit}>
+        <form className="stack" onSubmit={submit} noValidate>
           {mode === "signup" ? (
             <label>
               Full name
@@ -135,13 +182,13 @@ export function AuthForm(props: AuthFormProps) {
           {mode !== "forgot" ? (
             <label>
               Password
-              <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} required maxLength={128} />
+              <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} required minLength={6} maxLength={128} />
             </label>
           ) : null}
           {mode === "signup" || mode === "update" ? (
             <label>
               Confirm password
-              <input name="confirmPassword" type="password" autoComplete="new-password" required maxLength={128} />
+              <input name="confirmPassword" type="password" autoComplete="new-password" required minLength={6} maxLength={128} />
             </label>
           ) : null}
           {mode !== "update" ? <Turnstile ref={turnstileRef} siteKey={turnstileSiteKey} action={captchaAction} onToken={onToken} onError={setCaptchaError} /> : null}
