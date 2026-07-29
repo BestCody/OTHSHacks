@@ -13,8 +13,6 @@ type AuthFormProps =
   | { mode: "update"; turnstileSiteKey?: never }
   | { mode: CaptchaMode; turnstileSiteKey: string };
 
-const usernamePattern = /^[a-z0-9_]{3,30}$/;
-
 export function AuthForm(props: AuthFormProps) {
   const mode = props.mode;
   const turnstileSiteKey = mode === "update" ? "" : props.turnstileSiteKey;
@@ -45,12 +43,6 @@ export function AuthForm(props: AuthFormProps) {
     const password = String(data.get("password") ?? "");
     const confirmPassword = String(data.get("confirmPassword") ?? "");
     const fullName = String(data.get("fullName") ?? "").trim();
-    const username = String(data.get("username") ?? "").trim().toLowerCase();
-
-    if (mode === "signup" && !usernamePattern.test(username)) {
-      setError("Username must be 3–30 characters and use only lowercase letters, numbers, or underscores.");
-      return;
-    }
 
     if ((mode === "signup" || mode === "update") && password !== confirmPassword) {
       setError("The passwords do not match.");
@@ -72,26 +64,17 @@ export function AuthForm(props: AuthFormProps) {
         const requestedNext = new URLSearchParams(window.location.search).get("next");
         window.location.assign(getSafeAuthRedirect(requestedNext));
       } else if (mode === "signup") {
-        const { data: usernameAvailable, error: usernameError } = await supabase.rpc("is_username_available", {
-          p_username: username,
-        });
-        if (usernameError) throw new Error("We could not check that username. Please try again.");
-        if (usernameAvailable !== true) {
-          setError("That username is already taken.");
-          return;
-        }
-
         const { error: authError } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { full_name: fullName, username },
+            data: { full_name: fullName },
             emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
             captchaToken,
           },
         });
         if (authError) throw authError;
-        setMessage("Account created successfully. Check your email to verify your account before signing in.");
+        setMessage("Check your email for a verification link. If this address is already registered, sign in or reset your password instead.");
       } else if (mode === "forgot") {
         const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
@@ -110,11 +93,12 @@ export function AuthForm(props: AuthFormProps) {
     } catch (caught) {
       const authMessage = caught instanceof Error ? caught.message : "Authentication failed.";
       const normalized = authMessage.toLowerCase();
+      const duplicateEmail = normalized.includes("user already registered") || normalized.includes("email_exists");
       setError(
         normalized.includes("timeout-or-duplicate")
           ? "The security check expired. It has been refreshed; please try again."
-          : mode === "signup" && (normalized.includes("username") || normalized.includes("duplicate key"))
-            ? "That username is already taken."
+          : mode === "signup" && duplicateEmail
+            ? "An account with this email already exists. Sign in or reset your password instead."
             : authMessage,
       );
     } finally {
@@ -137,25 +121,10 @@ export function AuthForm(props: AuthFormProps) {
         <h1 className="page-title">{title}</h1>
         <form className="stack" onSubmit={submit}>
           {mode === "signup" ? (
-            <>
-              <label>
-                Full name
-                <input name="fullName" autoComplete="name" required minLength={2} maxLength={120} />
-              </label>
-              <label>
-                Username
-                <input
-                  name="username"
-                  autoComplete="username"
-                  required
-                  minLength={3}
-                  maxLength={30}
-                  pattern="[a-z0-9_]{3,30}"
-                  title="Use 3–30 lowercase letters, numbers, or underscores."
-                />
-                <span className={styles.help}>3–30 lowercase letters, numbers, or underscores.</span>
-              </label>
-            </>
+            <label>
+              Full name
+              <input name="fullName" autoComplete="name" required minLength={2} maxLength={120} />
+            </label>
           ) : null}
           {mode !== "update" ? (
             <label>
