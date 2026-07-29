@@ -57,6 +57,23 @@ async function installTurnstileStub(page: Page) {
   });
 }
 
+async function mockEmailAvailability(page: Page, inUse: boolean) {
+  await page.route("**/api/auth/email-in-use", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ inUse }),
+    });
+  });
+}
+
+async function fillSignup(page: Page, password = "incorrect-password") {
+  await page.getByLabel("Full name").fill("Test Applicant");
+  await page.getByLabel("Email").fill("new-applicant@example.com");
+  await page.getByLabel("Password", { exact: true }).fill(password);
+  await page.getByLabel("Confirm password").fill(password);
+}
+
 async function getTurnstileState(page: Page) {
   return page.evaluate(() => {
     const state = (window as typeof window & {
@@ -88,12 +105,7 @@ const scenarios = [
     name: "sign-up",
     path: "/auth/sign-up",
     action: "auth_signup",
-    fill: async (page: Page) => {
-      await page.getByLabel("Full name").fill("Test Applicant");
-      await page.getByLabel("Email").fill("new-applicant@example.com");
-      await page.getByLabel("Password", { exact: true }).fill("incorrect-password");
-      await page.getByLabel("Confirm password").fill("incorrect-password");
-    },
+    fill: fillSignup,
   },
   {
     name: "password-reset",
@@ -109,6 +121,7 @@ for (const scenario of scenarios) {
   test(`${scenario.name} consumes one token and waits for a fresh token before retry`, async ({ page }) => {
     const authRequestBodies: string[] = [];
     await installTurnstileStub(page);
+    await mockEmailAvailability(page, false);
 
     await page.route(/\/auth\/v1\//, async (route) => {
       const request = route.request();
@@ -155,6 +168,38 @@ for (const scenario of scenarios) {
     expect(authRequestBodies[1]).not.toContain("turnstile-token-1");
   });
 }
+
+test("signup shows a specific red duplicate-email message and does not call Supabase signup", async ({ page }) => {
+  let authRequests = 0;
+  await installTurnstileStub(page);
+  await mockEmailAvailability(page, true);
+  await page.route(/\/auth\/v1\//, async (route) => {
+    authRequests += 1;
+    await route.abort();
+  });
+
+  await page.goto("/auth/sign-up");
+  await fillSignup(page);
+  const submit = page.locator('button[type="submit"]');
+  await expect(submit).toBeEnabled({ timeout: 5_000 });
+  await submit.click();
+
+  await expect(page.getByRole("alert")).toHaveText("Email already in use.");
+  expect(authRequests).toBe(0);
+});
+
+test("signup shows the six-character password requirement as red text", async ({ page }) => {
+  await installTurnstileStub(page);
+  await mockEmailAvailability(page, false);
+
+  await page.goto("/auth/sign-up");
+  await fillSignup(page, "12345");
+  const submit = page.locator('button[type="submit"]');
+  await expect(submit).toBeEnabled({ timeout: 5_000 });
+  await submit.click();
+
+  await expect(page.getByRole("alert")).toHaveText("Password should be at least 6 characters.");
+});
 
 test("reset-password page asks for and confirms a new password", async ({ page }) => {
   await page.goto("/auth/reset-password");
