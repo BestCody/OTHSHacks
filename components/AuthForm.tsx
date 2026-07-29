@@ -93,6 +93,7 @@ export function AuthForm(props: AuthFormProps) {
     submittingRef.current = true;
     setBusy(true);
     const supabase = createClient();
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? window.location.origin).replace(/\/$/, "");
 
     try {
       if (mode === "login") {
@@ -122,7 +123,6 @@ export function AuthForm(props: AuthFormProps) {
           password,
           options: {
             data: { full_name: fullName },
-            emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
             captchaToken,
           },
         });
@@ -130,7 +130,7 @@ export function AuthForm(props: AuthFormProps) {
         setMessage("Check your email for a verification link.");
       } else if (mode === "forgot") {
         const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
+          redirectTo: `${siteUrl}/auth/callback?next=/auth/reset-password`,
           captchaToken,
         });
         if (authError) throw authError;
