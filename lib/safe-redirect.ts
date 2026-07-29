@@ -7,7 +7,7 @@
  */
 export function getSafeAuthRedirect(
   requested: string | null | undefined,
-  fallback: "/dashboard" | "/auth/update-password" = "/dashboard",
+  fallback: "/dashboard" | "/auth/reset-password" | "/auth/update-password" = "/dashboard",
 ): string {
   switch (requested) {
     case "/dashboard":
@@ -16,6 +16,8 @@ export function getSafeAuthRedirect(
       return "/organizer";
     case "/settings/security":
       return "/settings/security";
+    case "/auth/reset-password":
+      return "/auth/reset-password";
     case "/auth/update-password":
       return "/auth/update-password";
     default:
