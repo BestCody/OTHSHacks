@@ -9,10 +9,6 @@ const schema = z.object({
   email: z.string().trim().email().max(254),
 });
 
-function escapeLikePattern(value: string) {
-  return value.replace(/[\\%_]/g, "\\$&");
-}
-
 export async function POST(request: Request) {
   try {
     assertSameOrigin(request);
@@ -31,16 +27,22 @@ export async function POST(request: Request) {
     }
 
     const { email } = schema.parse(await request.json());
+    const normalizedEmail = email.toLowerCase();
     const admin = createAdminClient();
-    const { data, error } = await admin
-      .from("profiles")
-      .select("id")
-      .ilike("email", escapeLikePattern(email))
-      .limit(1);
+    const perPage = 1000;
 
-    if (error) throw new Error(`Email check failed: ${error.message}`);
+    for (let page = 1; ; page += 1) {
+      const { data, error } = await admin.auth.admin.listUsers({ page, perPage });
+      if (error) throw new Error(`Email check failed: ${error.message}`);
 
-    return NextResponse.json({ inUse: (data?.length ?? 0) > 0 });
+      if (data.users.some((user) => user.email?.toLowerCase() === normalizedEmail)) {
+        return NextResponse.json({ inUse: true });
+      }
+
+      if (data.users.length < perPage) break;
+    }
+
+    return NextResponse.json({ inUse: false });
   } catch (error) {
     return jsonError(error, "Email availability check failed.");
   }
