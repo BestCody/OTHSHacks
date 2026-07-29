@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         <h2>Retention</h2>
         <p>Unsuccessful applications and uploaded documents should be deleted within 90 days after the event. Accepted-participant operational records should be deleted within one year unless the school requires a different retention period. Security and audit records may be retained longer when needed to investigate an incident.</p>
         <h2>Your choices</h2>
-        <p>You may request access, correction, or deletion by contacting privacy@othacks.ca. Some records may need to be retained for safety, legal, or incident-response reasons.</p>
+        <p>You may request access, correction, or deletion by contacting privacy@othacks.xyz. Some records may need to be retained for safety, legal, or incident-response reasons.</p>
         <h2>Security and incidents</h2>
         <p>We use access controls, private storage, encryption in transit, audit logs, backups, and monitoring. No system is risk-free. Confirmed incidents are handled under the OTHacks incident-response plan and applicable school and legal requirements.</p>
       </article>
