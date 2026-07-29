@@ -9,7 +9,7 @@ const serverSchema = z.object({
   SECURITY_CONTACT_EMAIL: z.string().email().default("security@othacks.xyz"),
   ORGANIZER_EMAIL_DOMAIN: z.string().default("othacks.xyz"),
   RESEND_API_KEY: z.string().optional(),
-  EMAIL_FROM: z.string().default("OTHacks <noreply@othacks.xyz>"),
+  EMAIL_FROM: z.string().default("OTHacks <noreply@mail.othacks.xyz>"),
   FILE_SCAN_WEBHOOK_URL: z.string().url().optional().or(z.literal("")),
   FILE_SCAN_CALLBACK_SECRET: z.string().min(32).optional(),
   ALLOW_UNSCANNED_FILES: z.enum(["true", "false"]).default("false"),
