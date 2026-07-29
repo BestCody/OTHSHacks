@@ -1,94 +1,37 @@
 document.documentElement.classList.add("js");
 
-const menuButton = document.getElementById('menu-btn');
-  const navLinks = document.getElementById('nav-links');
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function closeMenu() {
-    navLinks.classList.remove('open');
-    document.body.classList.remove('menu-open');
-    menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.setAttribute('aria-label', 'Open navigation');
-  }
-
-  menuButton.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    document.body.classList.toggle('menu-open', isOpen);
-    menuButton.setAttribute('aria-expanded', String(isOpen));
-    menuButton.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
-  });
-
-  navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
-
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', event => {
-      const selector = link.getAttribute('href');
-      if (!selector || selector === '#') return;
-
-      const target = document.querySelector(selector);
-      if (!target) return;
-
-      event.preventDefault();
-      target.scrollIntoView({
-        behavior: prefersReducedMotion ? 'auto' : 'smooth',
-        block: 'start',
-      });
-
-      history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
-    });
-  });
-
-  if (window.location.hash) {
-    const initialTarget = document.querySelector(window.location.hash);
-    if (initialTarget) {
-      requestAnimationFrame(() => {
-        initialTarget.scrollIntoView({ block: 'start' });
-        history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
-      });
-    }
-  }
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
+if ("IntersectionObserver" in window && !reducedMotion) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
       if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+        entry.target.classList.add("visible");
+        revealObserver.unobserve(entry.target);
       }
-    });
-  }, { threshold: .08 });
+    }
+  }, { threshold: 0.13 });
 
-  document.querySelectorAll('[data-reveal]').forEach(element => observer.observe(element));
+  document.querySelectorAll("[data-reveal]").forEach((node) => revealObserver.observe(node));
+} else {
+  document.querySelectorAll("[data-reveal]").forEach((node) => node.classList.add("visible"));
+}
 
-  document.querySelectorAll('details').forEach(item => {
-    item.addEventListener('toggle', () => {
-      if (!item.open) return;
-      document.querySelectorAll('details[open]').forEach(openItem => {
-        if (openItem !== item) openItem.open = false;
-      });
-    });
-  });
+const forge = document.querySelector("[data-forge]");
+const forgeStates = Array.from({ length: 9 }, (_, index) => `forge-state-${index + 1}`);
 
-  const tiltClasses = [
-    'tilt-top-left',
-    'tilt-top-right',
-    'tilt-bottom-left',
-    'tilt-bottom-right',
-  ];
+function updateForge() {
+  if (!forge || reducedMotion) return;
 
-  if (!prefersReducedMotion) {
-    document.querySelectorAll('[data-pointer-tilt]').forEach(element => {
-      element.addEventListener('pointermove', event => {
-        const rect = element.getBoundingClientRect();
-        const horizontal = event.clientX < rect.left + rect.width / 2 ? 'left' : 'right';
-        const vertical = event.clientY < rect.top + rect.height / 2 ? 'top' : 'bottom';
+  const rect = forge.getBoundingClientRect();
+  const viewport = window.innerHeight;
+  const progress = Math.max(0, Math.min(1, (viewport - rect.top) / (viewport + rect.height * 0.5)));
+  const state = Math.max(0, Math.min(9, Math.floor(progress * 10)));
 
-        element.classList.remove(...tiltClasses);
-        element.classList.add(`tilt-${vertical}-${horizontal}`);
-      });
+  forge.classList.remove(...forgeStates);
+  if (state > 0) forge.classList.add(`forge-state-${state}`);
+}
 
-      element.addEventListener('pointerleave', () => {
-        element.classList.remove(...tiltClasses);
-      });
-    });
-  }
+updateForge();
+window.addEventListener("scroll", updateForge, { passive: true });
+window.addEventListener("resize", updateForge);
