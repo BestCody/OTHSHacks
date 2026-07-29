@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useCallback, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Turnstile, type TurnstileHandle } from "@/components/Turnstile";
 import { getSafeAuthRedirect } from "@/lib/safe-redirect";
@@ -31,6 +31,12 @@ export function AuthForm(props: AuthFormProps) {
   }, []);
   const captchaRequired = mode !== "update";
   const captchaAction = mode === "login" ? "auth_login" : mode === "signup" ? "auth_signup" : "auth_password_reset";
+
+  useEffect(() => {
+    if (mode !== "login") return;
+    const verified = new URLSearchParams(window.location.search).get("verified");
+    if (verified === "1") setMessage("Email verified. You can sign in.");
+  }, [mode]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
