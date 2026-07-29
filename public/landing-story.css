@@ -1,0 +1,407 @@
+/* Story path */
+.story {
+  position: relative;
+  padding: 120px 0 140px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 0, rgba(237,75,95,.12), transparent 30%),
+    linear-gradient(180deg, #171326 0%, #21152e 100%);
+}
+
+.story::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .22;
+  background-image:
+    linear-gradient(90deg, transparent 49.8%, rgba(255,255,255,.09) 50%, transparent 50.2%),
+    linear-gradient(0deg, transparent 49.8%, rgba(255,255,255,.05) 50%, transparent 50.2%);
+  background-size: 110px 110px;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+}
+
+.story-head {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0 auto 70px;
+  text-align: center;
+}
+
+.story-head h2,
+.forge-head h2,
+.hall-head h2,
+.finale h2 {
+  margin: 15px 0 18px;
+  font: 700 clamp(48px, 6.4vw, 82px)/.92 "Fraunces", Georgia, serif;
+  letter-spacing: -.05em;
+}
+
+.story-head p,
+.forge-head p,
+.hall-head p {
+  margin: 0 auto;
+  max-width: 700px;
+  color: #d8cfde;
+  font-size: 17px;
+  line-height: 1.62;
+  font-weight: 700;
+}
+
+.path {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  gap: 74px;
+}
+
+.path::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  bottom: 40px;
+  width: 3px;
+  translate: -50% 0;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--gold) 10%,
+    var(--ember) 55%,
+    var(--gold) 90%,
+    transparent
+  );
+  box-shadow: 0 0 20px rgba(244,204,114,.24);
+}
+
+.chapter {
+  display: grid;
+  grid-template-columns: 1fr 120px 1fr;
+  align-items: center;
+  gap: 28px;
+}
+
+.chapter:nth-child(even) .chapter-copy {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.chapter:nth-child(even) .chapter-scene {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.chapter-marker {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin: auto;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255,245,223,.35);
+  border-radius: 50%;
+  color: var(--night);
+  background: radial-gradient(circle at 35% 30%, #fff0b7, var(--gold));
+  box-shadow: 0 0 25px rgba(244,204,114,.26);
+  font: 800 22px/1 "Fraunces";
+  z-index: 3;
+}
+
+.chapter-copy {
+  max-width: 470px;
+}
+
+.chapter-copy h3 {
+  margin: 0 0 10px;
+  font: 700 39px/1 "Fraunces", Georgia, serif;
+  letter-spacing: -.025em;
+}
+
+.chapter-copy p {
+  margin: 0;
+  color: #cfc5d5;
+  line-height: 1.62;
+  font-weight: 700;
+}
+
+.chapter-scene {
+  position: relative;
+  min-height: 325px;
+  border: 1px solid rgba(255,245,223,.15);
+  border-radius: 34px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 28%, rgba(244,204,114,.18), transparent 24%),
+    linear-gradient(180deg, #392744, #20172e);
+  box-shadow: 0 28px 70px rgba(0,0,0,.25);
+}
+
+.chapter-scene::before {
+  content: "";
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -82px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #5b344c, #24172f);
+}
+
+.chapter-scene::after {
+  content: "";
+  position: absolute;
+  inset: auto 20px 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(244,204,114,.5), transparent);
+}
+
+.chapter-scene img {
+  position: absolute;
+  width: 190px;
+  left: 50%;
+  bottom: -12px;
+  translate: -50% 0;
+  filter: drop-shadow(0 16px 24px rgba(0,0,0,.28));
+}
+
+.scene-relic {
+  position: absolute;
+  z-index: 3;
+  border: 1px solid rgba(255,245,223,.24);
+  background: rgba(255,255,255,.05);
+  box-shadow: 0 18px 35px rgba(0,0,0,.20);
+  backdrop-filter: blur(8px);
+}
+
+.scene-relic.book {
+  width: 110px;
+  height: 72px;
+  right: 28px;
+  bottom: 48px;
+  border-radius: 8px 8px 16px 16px;
+  background: linear-gradient(135deg, #e0c28a, #a46a4c);
+  transform: rotate(-7deg);
+}
+
+.scene-relic.book::after {
+  content: "</>";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--night);
+  font-weight: 900;
+}
+
+.scene-relic.crystal {
+  width: 88px;
+  height: 118px;
+  right: 35px;
+  top: 54px;
+  clip-path: polygon(50% 0, 88% 28%, 74% 100%, 26% 100%, 12% 28%);
+  background: linear-gradient(150deg, #fff0b6, #e57a88 70%, #7e274a);
+  filter: drop-shadow(0 0 18px rgba(237,75,95,.32));
+}
+
+.scene-relic.crown {
+  width: 110px;
+  height: 90px;
+  right: 26px;
+  bottom: 55px;
+  clip-path: polygon(0 35%, 22% 60%, 40% 12%, 58% 60%, 82% 5%, 100% 35%, 88% 100%, 12% 100%);
+  background: linear-gradient(180deg, #ffe79e, #c98d3c);
+  filter: drop-shadow(0 0 14px rgba(244,204,114,.26));
+}
+
+/* Forge */
+.forge {
+  position: relative;
+  padding: 125px 0 145px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(242,139,69,.20), transparent 24%),
+    linear-gradient(180deg, #24172f 0%, #431f34 55%, #24172f 100%);
+}
+
+.forge::before,
+.forge::after {
+  content: "";
+  position: absolute;
+  width: 340px;
+  height: 650px;
+  top: 0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.04), transparent),
+    #2b1d36;
+  clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%);
+  opacity: .8;
+}
+
+.forge::before { left: -180px; }
+.forge::after { right: -180px; }
+
+.forge-head {
+  position: relative;
+  z-index: 3;
+  max-width: 760px;
+  margin: 0 auto 58px;
+  text-align: center;
+}
+
+.forge-stage {
+  position: relative;
+  z-index: 4;
+  min-height: 520px;
+  padding: 54px;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 30px;
+  align-items: center;
+  border: 1px solid rgba(255,245,223,.16);
+  border-radius: 44px;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(244,204,114,.12), transparent 28%),
+    rgba(18,13,28,.72);
+  box-shadow:
+    0 40px 100px rgba(0,0,0,.34),
+    inset 0 1px rgba(255,255,255,.06);
+  overflow: hidden;
+}
+
+.forge-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(244,204,114,.18) 0 1px, transparent 1.5px);
+  background-size: 36px 36px;
+  opacity: .18;
+  mask-image: radial-gradient(circle at center, black, transparent 80%);
+}
+
+.forge-label {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.forge-label h3 {
+  margin: 14px 0 8px;
+  font: 700 27px/1 "Fraunces";
+}
+
+.forge-label p {
+  margin: 0 auto;
+  max-width: 220px;
+  color: #c8bdd0;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.orb {
+  width: 105px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,245,223,.34);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 28%, white, transparent 10%),
+    radial-gradient(circle at 50% 50%, #ffe39b, #ed4b5f 62%, #4d2543 100%);
+  box-shadow:
+    0 0 34px rgba(237,75,95,.38),
+    inset 0 0 24px rgba(255,255,255,.18);
+  font-size: 40px;
+  animation: orbPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+  50% { transform: scale(1.06); box-shadow: 0 0 55px rgba(237,75,95,.50); }
+}
+
+.orb.done {
+  background:
+    radial-gradient(circle at 35% 28%, white, transparent 9%),
+    radial-gradient(circle at 50% 50%, #e9ffdf, #8ac0a6 60%, #31584c 100%);
+  box-shadow: 0 0 34px rgba(169,199,182,.36);
+}
+
+.ancient-machine {
+  position: relative;
+  z-index: 3;
+  min-height: 350px;
+  display: grid;
+  place-items: center;
+}
+
+.machine-ring {
+  position: absolute;
+  width: 310px;
+  aspect-ratio: 1;
+  border: 2px solid rgba(244,204,114,.35);
+  border-radius: 50%;
+  box-shadow:
+    0 0 40px rgba(244,204,114,.12),
+    inset 0 0 35px rgba(244,204,114,.08);
+  animation: rotateSlow 18s linear infinite;
+}
+
+.machine-ring::before,
+.machine-ring::after {
+  content: "";
+  position: absolute;
+  inset: 24px;
+  border: 1px dashed rgba(244,204,114,.42);
+  border-radius: 50%;
+}
+
+.machine-ring::after {
+  inset: 78px;
+  border-style: solid;
+}
+
+@keyframes rotateSlow {
+  to { transform: rotate(360deg); }
+}
+
+.forge-core {
+  position: relative;
+  width: 155px;
+  height: 210px;
+  z-index: 4;
+  clip-path: polygon(50% 0, 78% 24%, 95% 60%, 78% 100%, 22% 100%, 5% 60%, 22% 24%);
+  background:
+    radial-gradient(circle at 50% 52%, #fff0b8, transparent 10%),
+    radial-gradient(circle at 50% 54%, #f28b45, #ed4b5f 55%, #4c203e 100%);
+  filter:
+    drop-shadow(0 0 22px rgba(242,139,69,.42))
+    drop-shadow(0 22px 30px rgba(0,0,0,.28));
+  transform: scale(.78);
+  transition: transform .15s linear, filter .15s linear;
+}
+
+.forge-progress {
+  position: absolute;
+  left: 50%;
+  bottom: 25px;
+  width: min(66%, 360px);
+  height: 10px;
+  translate: -50% 0;
+  border: 1px solid rgba(255,245,223,.24);
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  overflow: hidden;
+  z-index: 6;
+}
+
+.forge-progress span {
+  display: block;
+  width: 7%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--ember), var(--gold));
+  box-shadow: 0 0 12px rgba(244,204,114,.45);
+  transition: width .15s linear;
+}
