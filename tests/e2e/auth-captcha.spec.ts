@@ -90,7 +90,6 @@ const scenarios = [
     action: "auth_signup",
     fill: async (page: Page) => {
       await page.getByLabel("Full name").fill("Test Applicant");
-      await page.getByLabel("Username").fill("test_applicant");
       await page.getByLabel("Email").fill("new-applicant@example.com");
       await page.getByLabel("Password", { exact: true }).fill("incorrect-password");
       await page.getByLabel("Confirm password").fill("incorrect-password");
@@ -110,27 +109,6 @@ for (const scenario of scenarios) {
   test(`${scenario.name} consumes one token and waits for a fresh token before retry`, async ({ page }) => {
     const authRequestBodies: string[] = [];
     await installTurnstileStub(page);
-
-    await page.route(/\/rest\/v1\/rpc\/is_username_available/, async (route) => {
-      const request = route.request();
-      const corsHeaders = {
-        "access-control-allow-origin": "*",
-        "access-control-allow-methods": "POST, OPTIONS",
-        "access-control-allow-headers": request.headers()["access-control-request-headers"] ?? "authorization, apikey, content-type, x-client-info",
-      };
-
-      if (request.method() === "OPTIONS") {
-        await route.fulfill({ status: 204, headers: corsHeaders });
-        return;
-      }
-
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        headers: corsHeaders,
-        body: "true",
-      });
-    });
 
     await page.route(/\/auth\/v1\//, async (route) => {
       const request = route.request();
