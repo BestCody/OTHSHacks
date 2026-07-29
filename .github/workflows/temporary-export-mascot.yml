@@ -1,0 +1,21 @@
+name: Temporary mascot export
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: othacks-mascot-original
+          path: public/assets/othacks-mascot.png
+          if-no-files-found: error
+          retention-days: 1
