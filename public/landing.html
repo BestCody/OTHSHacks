@@ -3,295 +3,283 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#201827" />
   <meta name="description" content="OTHacks — a beginner-friendly high school hackathon at Oakville Trafalgar High School." />
-  <meta name="theme-color" content="#171326" />
-  <meta property="og:title" content="OTHacks" />
-  <meta property="og:description" content="Every great creation begins with a spark. Join Oakville’s beginner-friendly high school hackathon." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="/assets/othacks-mascot.png" />
   <link rel="icon" href="/assets/othacks-mascot-head.png" type="image/png" />
-  <title>OTHacks — Every great creation begins with a spark</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <title>OTHacks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/landing.css" />
-  <link rel="stylesheet" href="/landing-story.css" />
-  <link rel="stylesheet" href="/landing-sections.css" />
 </head>
-
 <body>
-  <noscript><p class="noscript-banner">JavaScript is used for reveal effects and the Idea Forge animation, but registration remains available through <a href="/auth/sign-up">the application portal</a>.</p></noscript>
-  <header class="site-header">
-    <div class="shell nav">
-      <a class="brand" href="#top">
-        <img src="/assets/othacks-mascot-head.png" alt="" />
-        <span>OTHacks</span>
-      </a>
+<noscript><p class="noscript-banner">JavaScript is required for navigation animations, but registration remains available through <a href="/auth/sign-up">the application portal</a>.</p></noscript>
 
-      <nav class="nav-links" aria-label="Primary navigation">
-        <a href="#journey">Journey</a>
-        <a href="#forge">The Forge</a>
-        <a href="#hall">Sponsors</a>
-        <a href="#register">Register</a>
-      </nav>
+<!-- Reusable mascot and supporting SVG artwork. Every mascot instance uses the same selected image asset. -->
+<svg class="svg-symbols" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="devil-face" viewBox="0 0 643 772">
+      <image href="/assets/othacks-mascot.png" x="0" y="0" width="643" height="772" preserveAspectRatio="xMidYMid meet" />
+    </symbol>
 
-      <div class="nav-cta">
-        <a class="btn btn-primary" href="/auth/sign-up">Enter the realm <span>→</span></a>
-      </div>
+    <symbol id="devil-body" viewBox="0 0 643 772">
+      <image href="/assets/othacks-mascot.png" x="0" y="0" width="643" height="772" preserveAspectRatio="xMidYMid meet" />
+    </symbol>
+
+    <symbol id="flame" viewBox="0 0 100 130">
+      <path d="M51 7c5 23-8 27-3 45 4-11 13-17 20-26 3 18 22 27 22 54 0 27-18 44-41 44S8 107 8 81c0-28 20-38 24-65 9 10 14 22 14 35 9-13 13-27 5-44Z" fill="#ff8138" stroke="#201827" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M49 54c3 11-4 16-4 25 5-7 9-12 11-20 8 9 14 16 14 28 0 14-9 24-21 24S28 101 28 87c0-15 12-21 15-36 4 6 6 12 6 19 4-5 5-11 0-16Z" fill="#ffd36a"/>
+      <circle cx="42" cy="87" r="4" fill="#201827"/><circle cx="59" cy="87" r="4" fill="#201827"/>
+      <path d="M44 99c5 4 9 4 14 0" fill="none" stroke="#201827" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+
+    <symbol id="horns" viewBox="0 0 100 45">
+      <path d="M20 40C6 16 14-1 39 9c11 5 13 18 9 28-2 5-6 9-12 13" fill="#ffd36a" stroke="#201827" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M80 40C94 16 86-1 61 9c-11 5-13 18-9 28 2 5 6 9 12 13" fill="#ffd36a" stroke="#201827" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M27 14c-3 7-2 14 3 20" fill="none" stroke="#ffb34f" stroke-width="3" stroke-linecap="round"/>
+      <path d="M73 14c3 7 2 14-3 20" fill="none" stroke="#ffb34f" stroke-width="3" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="site-header">
+  <div class="shell nav">
+    <a class="brand" href="#top" aria-label="OTHacks home">
+      <svg aria-hidden="true"><use href="#devil-face" /></svg>
+      <span>OTHacks</span>
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Primary navigation">
+      <a href="#about">About</a>
+      <a href="#sponsors">Sponsors</a>
+      <a href="#team">Team</a>
+      <a href="#faq">FAQ</a>
+      <a class="mobile-register" href="/auth/sign-up">Register</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-primary btn-small" href="/auth/sign-up">Register <span aria-hidden="true">↗</span></a>
+      <button class="menu-btn" id="menu-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main id="top">
-    <section class="hero">
-      <div class="hero-sky"></div>
-      <div class="moon"></div>
-      <div class="mountain back"></div>
-      <div class="mountain"></div>
-      <div class="hero-ground"></div>
-
-      <span class="star star-hero-a"></span>
-      <span class="star star-hero-b"></span>
-      <span class="star star-hero-c"></span>
-      <span class="star star-hero-d"></span>
-      <span class="ember ember-hero-a"></span>
-      <span class="ember ember-hero-b"></span>
-      <span class="ember ember-hero-c"></span>
-
-      <div class="shell hero-grid">
-        <div class="hero-copy" data-reveal>
-          <span class="section-kicker">Oakville’s high school hackathon</span>
-          <h1>
-            <span class="name">OTHacks</span>
-            <span class="tagline">Every great creation begins with a spark.</span>
-          </h1>
-          <p>
-            Step into a weekend of invention, discovery, and controlled chaos.
-            Learn new skills, join a party of builders, and transform a small idea
-            into something worth sharing.
-          </p>
-
+<main id="top">
+  <section class="hero">
+    <div class="shell">
+      <div class="hero-grid">
+        <div class="hero-copy" data-reveal data-pointer-tilt="2.2">
+          <h1><span class="heavenly">OTHacks</span></h1>
+          <p>OTHacks is a beginner-friendly hackathon for high schoolers, hosted at Oakville Trafalgar High School.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="/auth/sign-up">Begin your journey <span>→</span></a>
-            <a class="btn btn-ghost" href="#journey">Explore the world</a>
+            <a class="btn btn-primary" href="/auth/sign-up">Register now <span aria-hidden="true">→</span></a>
           </div>
         </div>
 
-        <div class="hero-scene" data-reveal>
-          <div class="portal"></div>
-          <div class="ruin left"></div>
-          <div class="ruin right"></div>
-
-          <div class="rune-card one">Beginner friendly<small>No experience required</small></div>
-          <div class="rune-card two">Free to attend<small>Meals included</small></div>
-          <div class="rune-card three">High school students<small>Build with your party</small></div>
-
-          <img
-            class="hero-mascot"
-            src="/assets/othacks-mascot.png"
-            alt="OTHacks devil mascot standing before a glowing fantasy gateway"
-          />
-        </div>
-      </div>
-    </section>
-
-    <section class="story" id="journey">
-      <span class="mist mist-story-left"></span>
-      <span class="mist mist-story-right"></span>
-
-      <div class="shell">
-        <header class="story-head" data-reveal>
-          <span class="section-kicker">From spark to creation</span>
-          <h2>A journey through the realm of ideas</h2>
-          <p>
-            Every OTHacks journey starts with curiosity. Follow the path from your first idea to a project you can proudly share.
-          </p>
-        </header>
-
-        <div class="path">
-          <article class="chapter" data-reveal>
-            <div class="chapter-copy">
-              <h3>Discover the first spark</h3>
-              <p>
-                Start with workshops, mentors, and beginner-friendly support. No previous coding experience is required to take your first step.
-              </p>
-            </div>
-
-            <div class="chapter-marker">I</div>
-
-            <div class="chapter-scene">
-              <div class="scene-relic book"></div>
-              <img src="/assets/othacks-mascot.png" alt="" />
-            </div>
-          </article>
-
-          <article class="chapter" data-reveal>
-            <div class="chapter-copy">
-              <h3>Find your party</h3>
-              <p>
-                Come with friends, build independently, or meet new teammates at OTHacks. Every path is valid, and every party begins somewhere.
-              </p>
-            </div>
-
-            <div class="chapter-marker">II</div>
-
-            <div class="chapter-scene">
-              <div class="scene-relic crystal"></div>
-              <img src="/assets/othacks-mascot.png" alt="" class="scene-flipped" />
-            </div>
-          </article>
-
-          <article class="chapter" data-reveal>
-            <div class="chapter-copy">
-              <h3>Present what you forged</h3>
-              <p>
-                Bring your work into the light through demos, judging, prizes, and a celebration of everything created during the event.
-              </p>
-            </div>
-
-            <div class="chapter-marker">III</div>
-
-            <div class="chapter-scene">
-              <div class="scene-relic crown"></div>
-              <img src="/assets/othacks-mascot.png" alt="" />
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="forge" id="forge" data-forge>
-      <span class="ember ember-forge-a"></span>
-      <span class="ember ember-forge-b"></span>
-      <span class="ember ember-forge-c"></span>
-
-      <div class="shell">
-        <header class="forge-head" data-reveal>
-          <span class="section-kicker">Build your idea</span>
-          <h2>The Idea Forge</h2>
-          <p>
-            A project begins as a tiny spark. Through learning, teamwork, testing, and iteration, it becomes something real.
-          </p>
-        </header>
-
-        <div class="forge-stage" data-reveal>
-          <div class="forge-label">
-            <div class="orb">✦</div>
-            <h3>A small idea</h3>
-            <p>Uncertain, unfinished, and full of possibility.</p>
-          </div>
-
-          <div class="ancient-machine">
-            <div class="machine-ring"></div>
-            <div class="forge-core"></div>
-          </div>
-
-          <div class="forge-label">
-            <div class="orb done">◇</div>
-            <h3>A real project</h3>
-            <p>Built through learning, teamwork, testing, and iteration.</p>
-          </div>
-
-          <div class="forge-progress"><span></span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="hall" id="hall">
-      <div class="shell">
-        <header class="hall-head" data-reveal>
-          <span class="section-kicker">The great hall</span>
-          <h2>Those who keep the flame alive</h2>
-          <p>
-            Our partners make free meals, workshops, mentorship, prizes, and an unforgettable student experience possible.
-          </p>
-        </header>
-
-        <div class="great-hall" data-reveal>
-          <div class="columns"></div>
-
-          <div class="sponsor-throne">
-            <div>
-              <p class="tier-label">Inferno patron</p>
-              <div class="logo-row">
-                <div class="logo-stone inferno">Your crest here</div>
-              </div>
-            </div>
-
-            <div>
-              <p class="tier-label">Flame patrons</p>
-              <div class="logo-row">
-                <div class="logo-stone flame">Your crest here</div>
-                <div class="logo-stone flame">Your crest here</div>
-              </div>
-            </div>
-
-            <div>
-              <p class="tier-label">Spark patrons</p>
-              <div class="logo-row">
-                <div class="logo-stone spark-tier">Your crest</div>
-                <div class="logo-stone spark-tier">Your crest</div>
-                <div class="logo-stone spark-tier">Your crest</div>
-                <div class="logo-stone spark-tier">Your crest</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="sponsor-note">
-            <div>
-              <strong>Help the next generation begin their quest.</strong>
-              <span>Partner with OTHacks and help high school students turn curiosity into real projects.</span>
-            </div>
-            <a class="btn btn-primary" href="mailto:hello@othacks.xyz?subject=OTHacks%20Sponsorship">Become a patron</a>
+        <div class="hero-art" data-reveal>
+          <div class="hero-mascot-wrap" data-pointer-tilt="7" aria-label="OTHacks devil mascot">
+            <svg class="hero-mascot" viewBox="0 0 620 750" aria-hidden="true"><use href="#devil-body" /></svg>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section class="finale" id="register">
-      <span class="star star-finale-a"></span>
-      <span class="star star-finale-b"></span>
-      <span class="star star-finale-c"></span>
-      <span class="ember ember-finale-a"></span>
-
-      <div class="shell finale-grid">
-        <div data-reveal>
-          <span class="section-kicker">The gateway is open</span>
-          <h2>Bring your spark. <span>Leave with a legend.</span></h2>
-          <p>
-            Join high school students from across the community for a weekend of building, discovery, and new friendships.
-          </p>
-          <a class="btn btn-primary" href="/auth/sign-up">Register for OTHacks <span>→</span></a>
-        </div>
-
-        <div class="finale-scene" data-reveal>
-          <div class="summit-gate"></div>
-          <div class="finale-rune">Your journey starts here ✦</div>
-          <img
-            class="finale-mascot"
-            src="/assets/othacks-mascot.png"
-            alt="OTHacks mascot inviting the visitor through a glowing gateway"
-          />
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="shell footer-row">
-      <a class="brand" href="#top">
-        <img src="/assets/othacks-mascot-head.png" alt="" />
-        <span>OTHacks</span>
-      </a>
-      <p>© 2026 OTHacks · Oakville Trafalgar High School</p>
-      <div class="footer-links">
-        <a href="/auth/login">Sign in</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/code-of-conduct">Code of conduct</a>
-        <a href="mailto:hello@othacks.xyz">Email</a>
       </div>
     </div>
-  </footer>
-  <script src="/landing.js" defer></script>
+  </section>
+
+  <section class="section about" id="about">
+    <div class="shell">
+      <div class="section-title" data-reveal>
+        <div class="title-row">
+          <svg class="icon" aria-hidden="true"><use href="#flame" /></svg>
+          <h2>What’s OTHacks?</h2>
+          <svg class="icon icon-mirrored" aria-hidden="true"><use href="#flame" /></svg>
+        </div>
+        <p class="section-lede">A weekend for high school students of every experience level. Show up with an idea—or none at all—and leave with a project, new friends, and a suspicious amount of snacks.</p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card" data-reveal>
+          <span class="tiny-badge" aria-hidden="true">1</span>
+          <div class="feature-illustration">
+            <svg viewBox="0 0 300 230" aria-hidden="true">
+              <path d="M18 196c47-27 76-17 110-5 33 12 60-3 84-8 30-7 51 5 74 13v40H18Z" fill="#ff9aab" stroke="#201827" stroke-width="5"/>
+              <g transform="translate(25 27) scale(.58)"><use href="#devil-body" /></g>
+              <rect x="120" y="112" width="118" height="75" rx="10" fill="#c7d8e7" stroke="#201827" stroke-width="6"/>
+              <path d="m178 135 13 13-13 13-13-13Z" fill="#fffdf7" stroke="#201827" stroke-width="4"/>
+              <svg x="222" y="82" width="55" height="72"><use href="#flame" /></svg>
+            </svg>
+          </div>
+          <h3>Beginner friendly</h3>
+          <p>Never coded before? Perfect. Workshops and mentors help you get from “what’s Git?” to a working demo.</p>
+        </article>
+
+        <article class="feature-card" data-reveal>
+          <span class="tiny-badge badge-pink" aria-hidden="true">2</span>
+          <div class="feature-illustration">
+            <svg viewBox="0 0 300 230" aria-hidden="true">
+              <path d="M8 205c63-34 101-12 141-7 55 7 76-24 143 8v30H8Z" fill="#ffd36a" stroke="#201827" stroke-width="5"/>
+              <g transform="translate(0 54) scale(.48)"><use href="#devil-body" /></g>
+              <g transform="translate(150 54) scale(.48)"><use href="#devil-body" /></g>
+              <path d="M138 90c10-18 22-20 34-1" fill="none" stroke="#201827" stroke-width="8" stroke-linecap="round"/>
+              <path d="m154 61 6 13 14 1-11 9 3 14-12-7-12 7 3-14-11-9 14-1Z" fill="#ff8138" stroke="#201827" stroke-width="4"/>
+            </svg>
+          </div>
+          <h3>Team up or solo</h3>
+          <p>Bring your own crew, build alone, or meet your future co-founder at our team-matching mixer.</p>
+        </article>
+
+        <article class="feature-card" data-reveal>
+          <span class="tiny-badge badge-orange" aria-hidden="true">3</span>
+          <div class="feature-illustration">
+            <svg viewBox="0 0 300 230" aria-hidden="true">
+              <path d="M18 199c47-27 76-17 110-5 33 12 60-3 84-8 30-7 51 5 74 13v37H18Z" fill="#ff9aab" stroke="#201827" stroke-width="5"/>
+              <g transform="translate(27 46) scale(.52)"><use href="#devil-body" /></g>
+              <path d="M170 55h68v54c0 30-15 48-34 48s-34-18-34-48Z" fill="#ffd36a" stroke="#201827" stroke-width="6"/>
+              <path d="M170 72h-24c0 28 9 41 28 44M238 72h24c0 28-9 41-28 44" fill="none" stroke="#201827" stroke-width="6"/>
+              <path d="M204 157v25m-31 16h62" stroke="#201827" stroke-width="7" stroke-linecap="round"/>
+              <path d="m204 78 8 16 17 2-12 12 3 18-16-8-16 8 3-18-12-12 17-2Z" fill="#ff8138" stroke="#201827" stroke-width="4"/>
+            </svg>
+          </div>
+          <h3>Real prizes</h3>
+          <p>Industry mentors judge every project, with prizes for top hacks, beginner projects, and delightfully weird ideas.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section sponsors" id="sponsors">
+    <div class="shell">
+      <div class="section-title" data-reveal>
+        <div class="title-row">
+          <svg class="icon" aria-hidden="true"><use href="#devil-face" /></svg>
+          <h2>Our sponsors</h2>
+        </div>
+      </div>
+
+      <div class="sponsor-stage" data-reveal>
+        <div class="stage-hill"></div>
+        <svg class="stage-flame left" aria-hidden="true"><use href="#flame" /></svg>
+
+        <div class="tier">
+          <div class="tier-label">🔥 Inferno tier 🔥</div>
+          <div class="logo-grid inferno">
+            <div class="logo-card">Your logo here</div>
+            <div class="logo-card">Your logo here</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div class="tier-label tier-flame">Flame tier</div>
+          <div class="logo-grid flame">
+            <div class="logo-card">Your logo here</div>
+            <div class="logo-card">Your logo here</div>
+            <div class="logo-card">Your logo here</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div class="tier-label tier-spark">Spark tier</div>
+          <div class="logo-grid spark-tier">
+            <div class="logo-card">Your logo here</div>
+            <div class="logo-card">Your logo here</div>
+            <div class="logo-card">Your logo here</div>
+            <div class="logo-card">Your logo here</div>
+          </div>
+        </div>
+        <svg class="sponsor-peek" aria-hidden="true"><use href="#devil-face" /></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="section team" id="team">
+    <div class="shell">
+      <div class="section-title" data-reveal>
+        <div class="title-row">
+          <h2>Meet the organizers</h2>
+          <svg class="icon" aria-hidden="true"><use href="#devil-face" /></svg>
+        </div>
+        <p class="section-lede">The student team behind the schedule, sponsors, workshops, snacks, and controlled chaos.</p>
+      </div>
+      <div class="organizer-grid">
+        <article class="organizer" data-reveal>
+          <svg class="horns" aria-hidden="true"><use href="#horns" /></svg>
+          <div class="avatar"><span>A</span></div>
+          <h3>Organizer name</h3><p>Lead organizer</p>
+        </article>
+        <article class="organizer" data-reveal>
+          <svg class="horns" aria-hidden="true"><use href="#horns" /></svg>
+          <div class="avatar avatar-logistics"><span>B</span></div>
+          <h3>Organizer name</h3><p>Logistics</p>
+        </article>
+        <article class="organizer" data-reveal>
+          <svg class="horns" aria-hidden="true"><use href="#horns" /></svg>
+          <div class="avatar avatar-sponsorship"><span>C</span></div>
+          <h3>Organizer name</h3><p>Sponsorship</p>
+        </article>
+        <article class="organizer" data-reveal>
+          <svg class="horns" aria-hidden="true"><use href="#horns" /></svg>
+          <div class="avatar avatar-marketing"><span>D</span></div>
+          <h3>Organizer name</h3><p>Marketing</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq" id="faq">
+    <div class="shell faq-layout">
+      <div class="faq-art" data-reveal>
+        <svg viewBox="0 0 340 440" aria-hidden="true">
+          <path d="M21 409c37-52 64-63 100-54 37 10 55-14 93-4 41 10 65 35 96 58v39H21Z" fill="#b7274c" stroke="#201827" stroke-width="7"/>
+          <svg x="60" y="57" width="235" height="271"><use href="#devil-body" /></svg>
+          <path d="M46 218c23-24 45-28 67-11" fill="none" stroke="#ff8138" stroke-width="8" stroke-linecap="round"/>
+          <path d="M40 184c17-16 20-30 6-41-13-10-28-2-28 12 0 12 9 16 18 14" fill="none" stroke="#ffd36a" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="42" cy="240" r="7" fill="#ffd36a"/>
+          <rect x="100" y="236" width="143" height="95" rx="13" fill="#fff8e9" stroke="#201827" stroke-width="7" transform="rotate(-4 100 236)"/>
+          <path d="M171 237v96" stroke="#201827" stroke-width="5"/>
+          <path d="M119 260c13-6 26-5 39 2m-38 22c14-7 27-6 39 1m29-25c14-5 25-5 38 2m-38 22c14-5 26-4 38 2" fill="none" stroke="#f04461" stroke-width="5" stroke-linecap="round"/>
+          <svg x="241" y="306" width="65" height="90"><use href="#flame" /></svg>
+        </svg>
+      </div>
+      <div class="faq-copy" data-reveal>
+        <h2>Frequently asked questions</h2>
+        <p>Everything you need before entering the den. Still confused? Send us a message and a human—not just the mascot—will answer.</p>
+        <div class="accordion">
+          <details>
+            <summary>Who can attend OTHacks?</summary>
+            <p>Any current high school student, from any school, regardless of experience level.</p>
+          </details>
+          <details>
+            <summary>Do I need coding experience?</summary>
+            <p>Not at all. We run beginner workshops all weekend and mentors are around to help with anything.</p>
+          </details>
+          <details>
+            <summary>How much does it cost?</summary>
+            <p>Nothing. OTHacks is completely free, including meals and snacks.</p>
+          </details>
+          <details>
+            <summary>Do I need a team?</summary>
+            <p>Nope. Come solo and team up at our matching mixer, or bring a team of up to four.</p>
+          </details>
+          <details>
+            <summary>What should I bring?</summary>
+            <p>Laptop, charger, student ID, and anything you need to be comfortable for a 36-hour build sprint.</p>
+          </details>
+          <details>
+            <summary>What can I build?</summary>
+            <p>Anything: a web app, mobile app, game, hardware project, or something we haven’t thought of yet.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-grid">
+    <a class="brand" href="#top"><svg aria-hidden="true"><use href="#devil-face" /></svg><span>OTHacks</span></a>
+    <p>© 2026 OTHacks · Oakville Trafalgar High School</p>
+    <div class="footer-links"><a href="/auth/login">Sign in</a><a href="/privacy">Privacy</a><a href="/code-of-conduct">Code of conduct</a><a href="mailto:hello@othacks.xyz">Email</a></div>
+  </div>
+</footer>
+
+<script src="/landing.js" defer></script>
 </body>
 </html>
